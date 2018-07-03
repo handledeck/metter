@@ -1,3 +1,5 @@
 Debug/
 .vs/
 arch-metter/Debug
+*.filter
+*.user
