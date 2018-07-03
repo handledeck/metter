@@ -1,15 +1,29 @@
 #ifndef __GLOBAL_H__
 #define __GLOBAL_H__
 
+//#include "archmetter.h"
+//#include "calendar.h"
+
 #define SIZE_RECORD 16
+
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
+typedef signed char s8;
+typedef signed short s16;
+typedef signed int s32;
+
 
 /*memory copy src-where dest-when size-size write*/
 
 typedef u8 metphase[SIZE_RECORD];
-#define mem_cpy(src,dest,size) memcpy(src,dest,size)
+#define __memcpy(src,dest,size) memcpy(src,dest,size)
+/*поиск строки*/
+#define __strstr(source_string,sub_string) strstr(source_string,sub_string) 
+/*строка в число*/
+#define __atoi(str) atoi(str)
+#define __isdigit(int_c) isdigit(int_c)
+#define __abs(int_c) abs(int_c)
 
 /*Дата и время архивной записи*/
 struct metter_datetime

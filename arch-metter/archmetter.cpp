@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "archmetter.h"
 
 void check_phase(float phase_1, float phase_2, float phase_3, u8 veracity, struct metter_datetime mdt, struct arch_phases* valmet)
 {
@@ -37,19 +36,19 @@ void arch_value_to_time(const u32 value, struct metter_datetime *time)
 void pack_arch_phase(metphase* data, arch_phases* ph) {
 	u32 val = arch_time_to_value(&ph->adt);
 	val |= (ph->veracity << 0);
-	mem_cpy(&data[12], &val, 4);
-	mem_cpy(&data[8], &ph->phase_3, 4);
-	mem_cpy(&data[4], &ph->phase_2, 4);
-	mem_cpy(&data[0], &ph->phase_1, 4);
+	__memcpy(&data[12], &val, 4);
+	__memcpy(&data[8], &ph->phase_3, 4);
+	__memcpy(&data[4], &ph->phase_2, 4);
+	__memcpy(&data[0], &ph->phase_1, 4);
 }
 
 void unpack_arch_phase(metphase* data, arch_phases* ph) {
 	metter_datetime dt;
 	u32 val;
-	mem_cpy(&val, &data[12], 4);
+	__memcpy(&val, &data[12], 4);
 	arch_value_to_time(val, &ph->adt);
 	ph->veracity = ((val & (0x3Ful << 0)) >> 0);
-	mem_cpy(&ph->phase_3, &data[8], 4);
-	mem_cpy(&ph->phase_2, &data[4], 4);
-	mem_cpy(&ph->phase_1, &data[0], 4);
+	__memcpy(&ph->phase_3, &data[8], 4);
+	__memcpy(&ph->phase_2, &data[4], 4);
+	__memcpy(&ph->phase_1, &data[0], 4);
 }
