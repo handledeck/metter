@@ -22,10 +22,15 @@ typedef u8 metphase[SIZE_RECORD];
 #define __strstr(source_string,sub_string) strstr(source_string,sub_string) 
 /*строка в число*/
 #define __atoi(str) atoi(str)
+/*проверка на сисло*/
 #define __isdigit(int_c) isdigit(int_c)
+/*значение по модулю*/
 #define __abs(int_c) abs(int_c)
+/*участок памяти заполненный value*/
+#define __memset(dest,value,size) memset(dest,value,size)
 
 /*Дата и время архивной записи*/
+
 struct metter_datetime
 {
 	u8 year : 7;

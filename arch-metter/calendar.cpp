@@ -81,9 +81,9 @@ void _remove_month_to_date(struct metter_datetime *date)
 
 u32 add_minute_to_stamp(u32 valtime, s16 minutes) {
 	struct metter_datetime ti;
-	_calendar_schedule_value_to_time(valtime, &ti);
+	_calendar_value_to_time(valtime, &ti);
 	_add_minutes(&ti, minutes);
-	return _calendar_time_to_scheduler_value(&ti);
+	return _calendar_time_to_value(&ti);
 }
 
 void _add_day_to_date(struct metter_datetime *date)
@@ -224,23 +224,39 @@ void _add_minutes(struct metter_datetime* tm, s16 minutes) {
 }
 
 
-u32 _calendar_time_to_scheduler_value(struct metter_datetime *time)
+u32 _calendar_time_to_value(struct metter_datetime *time)
 {
-	u32 register_value;
+	/*u32 register_value;
 	register_value = (time->year - 2000) << 22;
 	register_value |= (time->month << 17);
 	register_value |= (time->day << 12);
 	register_value |= (time->hour << 6);
 	register_value |= (time->minute << 0);
-	return register_value;
+	return register_value;*/
+	u32 value;
+	__memset(&value, 0, sizeof(u32));
+	value = time->year << 25;
+	value |= (time->month << 21);
+	value |= (time->day << 16);
+	value |= (time->hour << 11);
+	value |= (time->minute << 5);
+	//value |= (time->veracity << 4);
+	//value |= (time->reserved << 0);
+	return value;
 }
 
-void _calendar_schedule_value_to_time(const u32 register_value, struct metter_datetime *time)
+void _calendar_value_to_time(const u32 value, struct metter_datetime *time)
 {
-	time->year = ((register_value &  (0x3Ful << 22)) >> 22) + 2000;
+	/*time->year = ((register_value &  (0x3Ful << 22)) >> 22) + 2000;
 	time->month = ((register_value & (0xFul << 17)) >> 17);
 	time->day = ((register_value & (0x1Ful << 12)) >> 12);
 	time->hour = ((register_value & (0x1Ful << 6)) >> 6);
-	time->minute = ((register_value & (0x3Ful << 0)) >> 0);
+	time->minute = ((register_value & (0x3Ful << 0)) >> 0);*/
+	__memset(time, 0, SIZE_RECORD);
+	time->year = (value &  (0x3Ful << 25)) >> 25;
+	time->month = ((value & (0xFul << 21)) >> 21);
+	time->day = ((value & (0x1Ful << 16)) >> 16);
+	time->hour = ((value & (0x1Ful << 11)) >> 11);
+	time->minute = ((value & (0x3Ful << 5)) >> 5);
 }
 
