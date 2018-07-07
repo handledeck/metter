@@ -17,7 +17,8 @@ typedef signed int s32;
 /*memory copy src-where dest-when size-size write*/
 
 typedef u8 metphase[SIZE_RECORD];
-#define __memcpy(src,dest,size) memcpy(src,dest,size)
+/**/
+#define __memcpy(destination,source,size) memcpy(destination,source,size)
 /*поиск строки*/
 #define __strstr(source_string,sub_string) strstr(source_string,sub_string) 
 /*строка в число*/
