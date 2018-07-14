@@ -1,5 +1,9 @@
 #include "stdafx.h"
 
+u8 __datas[ALL_RECORDS];
+u32 __arch_count_records = 0;
+u32 __current_record=0;
+
 void check_phase(float phase_1, float phase_2, float phase_3, u8 veracity, struct metter_datetime mdt, struct arch_phases* valmet)
 {
 	valmet->phase_1 = phase_1;
@@ -8,30 +12,6 @@ void check_phase(float phase_1, float phase_2, float phase_3, u8 veracity, struc
 	valmet->veracity = veracity;
 	valmet->adt = mdt;
 };
-
-//u32 arch_time_to_value(struct metter_datetime *time)
-//{
-//	u32 value;
-//	value = time->year << 25;
-//	value |= (time->month << 21);
-//	value |= (time->day << 16);
-//	value |= (time->hour << 11);
-//	value |= (time->minute << 5);
-//	//value |= (time->veracity << 4);
-//	//value |= (time->reserved << 0);
-//	return value;
-//}
-//
-//void arch_value_to_time(const u32 value, struct metter_datetime *time)
-//{
-//	time->year = (value &  (0x3Ful << 25)) >> 25;
-//	time->month = ((value & (0xFul << 21)) >> 21);
-//	time->day = ((value & (0x1Ful << 16)) >> 16);
-//	time->hour = ((value & (0x1Ful << 11)) >> 11);
-//	time->minute = ((value & (0x3Ful << 5)) >> 5);
-//	//time->veracity = ((value & (0x3Ful << 4)) >> 4);
-//	//time->reserved = ((value & (0x3Ful << 0)) >> 0);
-//}
 
 void pack_arch_phase(metphase* data, arch_phases* ph) {
 	metphase da;
@@ -55,4 +35,48 @@ void unpack_arch_phase(metphase* data, arch_phases* ph) {
 	__memcpy(&ph->phase_3, &da[8], 4);
 	__memcpy(&ph->phase_2, &da[4], 4);
 	__memcpy(&ph->phase_1, &da[0], 4);
+}
+
+void add_record(struct arch_phases* aph) {
+	metphase mph;
+	if ((__arch_count_records*SIZE_RECORD) + SIZE_RECORD <= ALL_RECORDS) {
+		pack_arch_phase(&mph, aph);
+		__memcpy(&__datas[__arch_count_records*SIZE_RECORD], &mph, SIZE_RECORD);
+		__arch_count_records++;
+		__current_record = __arch_count_records - 1;
+	}
+	else {
+		u32 cur_rec = 0;
+		for (u32 i = 0; i < COUNT_RECORDS; i++)
+		{
+			cur_rec++;
+			metphase lph;
+			struct arch_phases aph_;
+			__memset(&aph_, 0, 0);
+			__memcpy(&lph, &__datas[cur_rec*SIZE_RECORD], SIZE_RECORD);
+			__memcpy(&__datas[(cur_rec - 1)*SIZE_RECORD], &lph, SIZE_RECORD);
+		}
+		pack_arch_phase(&mph, aph);
+		__memcpy(&__datas[(cur_rec - 1)*SIZE_RECORD], &mph, SIZE_RECORD);
+		__current_record = COUNT_RECORDS-1;
+	}
+}
+
+/*получение архивных значений по индексу от текущего*/
+void arch_get_record_by_index(u32 index) {
+
+}
+
+void printarch() {
+	printf("----------------------------------------\r\n");
+	for (u32 i = 0; i < COUNT_RECORDS; i++)
+	{
+		metphase lph;
+		struct arch_phases aph_;
+		__memset(&aph_, 0, 0);
+		__memcpy(&lph, &__datas[i*SIZE_RECORD], SIZE_RECORD);
+		unpack_arch_phase(&lph, &aph_);
+		printf("record %d) %d.%d.%d %d:%d ph1:%d ph2:%d ph3:%d\r\n", i, aph_.adt.year, aph_.adt.month, aph_.adt.day, aph_.adt.hour, aph_.adt.minute,
+			aph_.phase_1, aph_.phase_2, aph_.phase_3);
+	}
 }

@@ -4,8 +4,6 @@
 //#include "archmetter.h"
 //#include "calendar.h"
 
-#define SIZE_RECORD 16
-
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -14,9 +12,6 @@ typedef signed short s16;
 typedef signed int s32;
 
 
-/*memory copy src-where dest-when size-size write*/
-
-typedef u8 metphase[SIZE_RECORD];
 /**/
 #define __memcpy(destination,source,size) memcpy(destination,source,size)
 /*поиск строки*/
@@ -30,7 +25,13 @@ typedef u8 metphase[SIZE_RECORD];
 /*участок памяти заполненный value*/
 #define __memset(dest,value,size) memset(dest,value,size)
 
-/*Дата и время архивной записи*/
+/*Дата и время архивной записи
+year   - 7 бит 2000 год + 163
+month  - 4 бит 1-12 месяц
+day    - 5 бит 1-31 день
+hour   - 5 бит 0-23 час
+minute - 6 бит 0-59 минут
+*/
 
 struct metter_datetime
 {
@@ -41,7 +42,16 @@ struct metter_datetime
 	u8 minute : 6;
 };
 
-/*Дата, время, значение по фазам, достоверность */
+/*Дата, время, значение по фазам, достоверность 
+	adt      - дата и время среза
+	veracity - 5 бит 1 бит - достоверность 1 фаза,
+					 2 бит - достоверность 2 фаза,
+					 3 бит - достоверность 3 фаза,
+					 4-5 биты зарезервированы
+	phase_1  - значение по фазе 1
+	phase_2  - значение по фазе 2
+	phase_3  - значение по фазе 3
+*/
 struct arch_phases
 {
 	metter_datetime adt;
