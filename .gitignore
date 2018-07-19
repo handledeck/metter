@@ -3,3 +3,4 @@ Debug/
 arch-metter/Debug/
 arch-metter/arch-metter.vcxproj.filters
 arch-metter/arch-metter.vcxproj.user
+arch-metter/*.dat
