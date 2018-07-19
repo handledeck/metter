@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-u8 __datas[ALL_RECORDS];
+u8 __datas[MEMORY_SIZE];
 u32 __arch_count_records = 0;
 u32 __current_record=0;
 
-void check_phase(float phase_1, float phase_2, float phase_3, u8 veracity, struct metter_datetime mdt, struct arch_phases* valmet)
+void check_phase(u32 phase_1, u32 phase_2, u32 phase_3, u8 veracity, struct metter_datetime mdt, struct arch_phases* valmet)
 {
 	valmet->phase_1 = phase_1;
 	valmet->phase_2 = phase_2;
@@ -25,7 +25,6 @@ void pack_arch_phase(metphase* data, arch_phases* ph) {
 }
 
 void unpack_arch_phase(metphase* data, arch_phases* ph) {
-	metter_datetime dt;
 	metphase da;
 	u32 val = 0;
 	__memcpy(&da, data, SIZE_RECORD);
@@ -39,7 +38,7 @@ void unpack_arch_phase(metphase* data, arch_phases* ph) {
 
 void add_record(struct arch_phases* aph) {
 	metphase mph;
-	if ((__arch_count_records*SIZE_RECORD) + SIZE_RECORD <= ALL_RECORDS) {
+	if ((__arch_count_records + 1) <= COUNT_RECORDS) {
 		pack_arch_phase(&mph, aph);
 		__memcpy(&__datas[__arch_count_records*SIZE_RECORD], &mph, SIZE_RECORD);
 		__arch_count_records++;
@@ -51,8 +50,8 @@ void add_record(struct arch_phases* aph) {
 		{
 			cur_rec++;
 			metphase lph;
-			struct arch_phases aph_;
-			__memset(&aph_, 0, 0);
+			//struct arch_phases aph_;
+			//__memset(&aph_, 0, 0);
 			__memcpy(&lph, &__datas[cur_rec*SIZE_RECORD], SIZE_RECORD);
 			__memcpy(&__datas[(cur_rec - 1)*SIZE_RECORD], &lph, SIZE_RECORD);
 		}

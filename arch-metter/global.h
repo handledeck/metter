@@ -1,9 +1,6 @@
 #ifndef __GLOBAL_H__
 #define __GLOBAL_H__
 
-//#include "archmetter.h"
-//#include "calendar.h"
-
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -11,6 +8,8 @@ typedef signed char s8;
 typedef signed short s16;
 typedef signed int s32;
 
+#define OUTD(FORMAT,...) \
+printf(FORMAT,##__VA_ARGS__,"\r\n");
 
 /**/
 #define __memcpy(destination,source,size) memcpy(destination,source,size)
