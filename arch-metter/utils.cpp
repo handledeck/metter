@@ -21,7 +21,7 @@ void add_record_to_archive(struct arch_phases* aph) {
 			fseek(__f_datas, __arch_count_records*SIZE_RECORD, SEEK_SET);
 			fwrite(&mph, 16, 1, __f_datas);
 			__arch_count_records++;
-			__current_record = __arch_count_records - 1;
+			__current_index = __arch_count_records - 1;
 		}
 		else {
 			u32 cur_rec = 0;
@@ -42,7 +42,7 @@ void add_record_to_archive(struct arch_phases* aph) {
 			fseek(__f_datas, (cur_rec - 1)*SIZE_RECORD, SEEK_SET);
 			fwrite(&mph, 16, 1, __f_datas);
 			//__memcpy(&__datas[(cur_rec - 1)*SIZE_RECORD], &mph, SIZE_RECORD);
-			__current_record = COUNT_RECORDS - 1;
+			__current_index = COUNT_RECORDS - 1;
 		}
 		if (__f_datas != NULL)
 		{

@@ -1,12 +1,17 @@
 #ifndef __GLOBAL_H__
 #define __GLOBAL_H__
 
+#define MEMORY_SIZE	64*1024 //64 килобайт памяти
+#define SIZE_RECORD 16		//16 размер одной записи
+#define COUNT_RECORDS	(MEMORY_SIZE/SIZE_RECORD)
+
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 typedef signed char s8;
 typedef signed short s16;
 typedef signed int s32;
+typedef u8 metphase[SIZE_RECORD];
 
 #define OUTD(FORMAT,...) \
 printf(FORMAT,##__VA_ARGS__,"\r\n");
@@ -23,6 +28,21 @@ printf(FORMAT,##__VA_ARGS__,"\r\n");
 #define __abs(int_c) abs(int_c)
 /*участок памяти заполненный value*/
 #define __memset(dest,value,size) memset(dest,value,size)
+/*выделение памяти*/
+#define __malloc(size) malloc(size)
+
+
+/*Общие константы устройства*/
+struct genl_metter {
+	//тип счетчика
+	u8 type_metter[4];
+	//серийный номер
+	u32 serial_part;
+	//дата изготовления
+	u32 date_produced;
+	//версия ПО
+	u8 version_po[8];
+};
 
 /*Дата и время архивной записи
 year   - 7 бит 2000 год + 163
@@ -59,6 +79,10 @@ struct arch_phases
 	u32 phase_2;
 	u32 phase_3;
 };
+
+extern u8 __datas[MEMORY_SIZE];
+extern u32 __arch_count_records;
+extern u32 __current_index;
 
 
 #endif // !__GLOBAL_H__

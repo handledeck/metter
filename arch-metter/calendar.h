@@ -1,4 +1,4 @@
-#include "global.h"
+#include "config.h"
 #ifndef __CALENDAR_H__
 #define __CALENDAR_H__
 
